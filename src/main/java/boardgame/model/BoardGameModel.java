@@ -13,6 +13,7 @@ public class BoardGameModel {
 
     private ReadOnlyObjectWrapper<Square>[][] board = new ReadOnlyObjectWrapper[BOARD_SIZE][BOARD_SIZE];
     private String player = "player1";
+    public String winner;
     private int moves = 0;
     private int maxMove = BOARD_SIZE*BOARD_SIZE-60;
 
@@ -60,7 +61,6 @@ public class BoardGameModel {
 
     public boolean isFinished(int i, int j, String name1, String name2){
         if(moves == maxMove){
-            System.out.println("This game is a draw.");
             Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
             jdbi.installPlugin(new SqlObjectPlugin());
             try (Handle handle = jdbi.open()) {
@@ -68,6 +68,7 @@ public class BoardGameModel {
                 dao.createTable();
                 dao.insertGames(name1, name2, "draw");
             }
+            winner = "draw";
             return true;
             //TODO: A DÖNTETLENT MEGCSINÁLNI, hogy hamarabb is detektálja, hogy döntetlen.
         }
@@ -79,7 +80,6 @@ public class BoardGameModel {
                 }
             }
             if(won) {
-                System.out.println(name1 + " won!");
                 Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
                 jdbi.installPlugin(new SqlObjectPlugin());
                 try (Handle handle = jdbi.open()) {
@@ -87,6 +87,7 @@ public class BoardGameModel {
                     dao.createTable();
                     dao.insertGames(name1, name2, name1);
                 }
+                winner = name1;
                 return true;
             }
         }else if(player == "player1"){
@@ -97,7 +98,6 @@ public class BoardGameModel {
                 }
             }
             if(won) {
-                System.out.println(name2 + " won!");
                 Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
                 jdbi.installPlugin(new SqlObjectPlugin());
                 try (Handle handle = jdbi.open()) {
@@ -105,6 +105,7 @@ public class BoardGameModel {
                     dao.createTable();
                     dao.insertGames(name1, name2, name2);
                 }
+                winner = name2;
                 return true;
             }
         }
@@ -124,7 +125,6 @@ public class BoardGameModel {
 
     public static void main(String[] args) {
         var model = new BoardGameModel();
-        System.out.println(model);
     }
 
 }

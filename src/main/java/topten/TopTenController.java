@@ -13,6 +13,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -20,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 
 public class TopTenController {
+
+    private static final Logger logger = LogManager.getLogger();
 
     @FXML
     private TableView<Map> toptenTable;
@@ -33,6 +37,7 @@ public class TopTenController {
     private TopTenModel model = new TopTenModel();
 
     public void quit(ActionEvent actionEvent) {
+        logger.info("Quitting the game.");
         Platform.exit();
         System.exit(0);
     }
@@ -42,6 +47,7 @@ public class TopTenController {
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
         stage.show();
+        logger.info("Loading new game.");
     }
 
     @FXML

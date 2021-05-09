@@ -15,10 +15,13 @@ import javafx.scene.paint.Paint;
 import boardgame.model.BoardGameModel;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 public class BoardGameController {
+    public static final Logger logger = LogManager.getLogger();
     private String userName1;
     private String userName2;
 
@@ -80,7 +83,8 @@ public class BoardGameController {
         var square = (StackPane) event.getSource();
         var row = GridPane.getRowIndex(square);
         var col = GridPane.getColumnIndex(square);
-        System.out.printf("Click on square (%d,%d)\n", row, col);
+        //System.out.printf("Click on square (%d,%d)\n", row, col);
+        logger.info("Click on square ({},{})", row, col);
         model.move(row, col);
         if(model.isFinished(row,col, this.userName1, this.userName2)){
             try {
@@ -89,8 +93,13 @@ public class BoardGameController {
                 stage.setTitle("Results");
                 stage.setScene(new Scene(root));
                 stage.show();
+                if(model.winner == "draw"){
+                    logger.info("The game is a draw.");
+                } else {
+                    logger.info("The winner is: {}", model.winner);
+                }
             } catch (IOException e) {
-                e.printStackTrace();
+                logger.error(e);
             }
         }
     }

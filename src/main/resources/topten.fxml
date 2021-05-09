@@ -12,7 +12,7 @@
           <TableColumn fx:id="wins" prefWidth="295.0" text="Number of wins" />
         </columns>
       </TableView>
-      <Label layoutX="230.0" layoutY="40.0" text="Top 10 players by win count">
+      <Label layoutX="210.0" layoutY="40.0" text="Top 10 players by number of wins">
          <font>
             <Font size="24.0" />
          </font>

@@ -10,10 +10,14 @@ import javafx.scene.Scene;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 
 public class LaunchGameController {
+
+    private static final Logger logger = LogManager.getLogger();
 
     @FXML
     private TextField firstUsernameTextfield;
@@ -38,6 +42,7 @@ public class LaunchGameController {
             stage.setTitle("Board game");
             stage.setScene(new Scene(root));
             stage.show();
+            logger.info("Usernames are set to {} and {}, loading the game.", firstUsernameTextfield.getText(), secondUsernameTextfield.getText());
         }
     }
 }
