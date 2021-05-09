@@ -4,6 +4,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+/**
+ * A class representing a match between two players.
+ */
 @NoArgsConstructor
 @AllArgsConstructor
 @Data

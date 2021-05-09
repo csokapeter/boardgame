@@ -7,14 +7,27 @@ import org.jdbi.v3.core.Jdbi;
 import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import topten.MatchDao;
 
+/**
+ * Class representing the state of the game.
+ */
 public class BoardGameModel {
 
+    /**
+     * The number of rows and columns the board has.
+     */
     public static int BOARD_SIZE = 11;
 
     private ReadOnlyObjectWrapper<Square>[][] board = new ReadOnlyObjectWrapper[BOARD_SIZE][BOARD_SIZE];
     private String player = "player1";
+
+    /**
+     * Contains the outcome of the match.
+     */
     public String winner;
 
+    /**
+     * Creates a {@code BoardGameModel} object representing the initial state of the game.
+     */
     public BoardGameModel() {
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
@@ -36,10 +49,26 @@ public class BoardGameModel {
         return board[i][j].get();
     }
 
+    /**
+     * Returns whether or not the player can make a move on the square
+     * with the coordinates ({@code i},{@code j}).
+     *
+     * @param i the row number
+     * @param j the column number
+     * @return whether or not the player can make a move on the square
+     * with the coordinates ({@code i},{@code j})
+     */
     public boolean canMove(int i, int j){
         return board[i][j].get() == Square.NONE;
     }
 
+    /**
+     * Sets the state of the square with the coordinates ({@code i}{@code j})
+     * on the board.
+     *
+     * @param i the row number
+     * @param j the column number
+     */
     public void move(int i, int j) {
         if(player.equals("player1")){
             board[i][j].set(Square.PIROS);
@@ -51,6 +80,12 @@ public class BoardGameModel {
         }
     }
 
+    /**
+     * Checks if the game has finished, and sets the winner to
+     * either draw, player1 or player2.
+     *
+     * @return whether the game finished.
+     */
     public boolean isFinished(){
         int completedRows = 0;
         for(int i = 0; i < BOARD_SIZE; i++){
@@ -107,6 +142,13 @@ public class BoardGameModel {
         return false;
     }
 
+    /**
+     * Writes the game details to the database.
+     *
+     * @param name1 username of player1
+     * @param name2 username of player2
+     * @param winnerPlayer username of the winner
+     */
     public void writeDatabase(String name1, String name2, String winnerPlayer){
         Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
         jdbi.installPlugin(new SqlObjectPlugin());
@@ -126,6 +168,11 @@ public class BoardGameModel {
             sb.append('\n');
         }
         return sb.toString();
+    }
+
+    public static void main(String[] args) {
+        BoardGameModel model = new BoardGameModel();
+        System.out.println(model);
     }
 
 }

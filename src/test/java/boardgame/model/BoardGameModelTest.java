@@ -15,10 +15,6 @@ class BoardGameModelTest {
     }
 
     @Test
-    void squareProperty() {
-    }
-
-    @Test
     void canMove() {
         assertTrue(model.canMove(0,0));
         model.move(0,0);
