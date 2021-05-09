@@ -14,17 +14,15 @@ public class BoardGameModel {
     private ReadOnlyObjectWrapper<Square>[][] board = new ReadOnlyObjectWrapper[BOARD_SIZE][BOARD_SIZE];
     private String player = "player1";
     public String winner;
-    private int moves = 0;
-    private int maxMove = BOARD_SIZE*BOARD_SIZE-60;
 
     public BoardGameModel() {
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
                 board[i][j] = new ReadOnlyObjectWrapper<Square>(Square.NONE);
                 if(i % 2 == 1 && j % 2 == 0){
-                    board[i][j].set(Square.KEK);
-                }else if(i % 2 == 0 && j % 2 == 1){
                     board[i][j].set(Square.PIROS);
+                }else if(i % 2 == 0 && j % 2 == 1){
+                    board[i][j].set(Square.KEK);
                 }
             }
         }
@@ -39,14 +37,12 @@ public class BoardGameModel {
     }
 
     public void move(int i, int j) {
-        if(board[i][j].get() == Square.NONE && player == "player1"){
+        if(board[i][j].get() == Square.NONE && player.equals("player1")){
             board[i][j].set(Square.PIROS);
-            moves++;
             player = "player2";
         }
-        else if(board[i][j].get() == Square.NONE && player == "player2"){
+        else if(board[i][j].get() == Square.NONE && player.equals("player2")){
             board[i][j].set(Square.KEK);
-            moves++;
             player = "player1";
         }
         /*
@@ -59,8 +55,25 @@ public class BoardGameModel {
         );*/
     }
 
-    public boolean isFinished(int i, int j, String name1, String name2){
-        if(moves == maxMove){
+    public boolean isFinished(int row, int col, String name1, String name2){
+        int completedRows = 0;
+        for(int i = 0; i < BOARD_SIZE; i++){
+            for (int j = 0; j < BOARD_SIZE; j++){
+                if (board[i][j].get() == Square.KEK) {
+                    completedRows++;
+                    break;
+                }
+            }
+        }
+        for(int i = 0; i < BOARD_SIZE; i++){
+            for (int j = 0; j < BOARD_SIZE; j++){
+                if (board[j][i].get() == Square.PIROS) {
+                    completedRows++;
+                    break;
+                }
+            }
+        }
+        if(completedRows == 22){
             Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
             jdbi.installPlugin(new SqlObjectPlugin());
             try (Handle handle = jdbi.open()) {
@@ -70,12 +83,11 @@ public class BoardGameModel {
             }
             winner = "draw";
             return true;
-            //TODO: A DÖNTETLENT MEGCSINÁLNI, hogy hamarabb is detektálja, hogy döntetlen.
         }
-        else if(player == "player2"){
+        else if(player.equals("player2")){
             boolean won = true;
-            for(int k = 0; k < BOARD_SIZE; k++){
-                if(board[i][k].get() != Square.PIROS){
+            for(int i = 0; i < BOARD_SIZE; i++){
+                if(board[row][i].get() != Square.PIROS){
                     won = false;
                 }
             }
@@ -90,10 +102,10 @@ public class BoardGameModel {
                 winner = name1;
                 return true;
             }
-        }else if(player == "player1"){
+        }else if(player.equals("player1")){
             boolean won = true;
-            for(int k = 0; k < BOARD_SIZE; k++){
-                if(board[k][j].get() != Square.KEK) {
+            for(int i = 0; i < BOARD_SIZE; i++){
+                if(board[i][col].get() != Square.KEK) {
                     won = false;
                 }
             }
