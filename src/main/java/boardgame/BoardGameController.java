@@ -50,14 +50,6 @@ public class BoardGameController {
         var square = new StackPane();
         square.getStyleClass().add("square");
         var piece = new Rectangle(60,60);
-/*
-        piece.fillProperty().bind(Bindings.when(model.squareProperty(i, j).isEqualTo(Square.NONE))
-                .then(Color.TRANSPARENT)
-                .otherwise(Bindings.when(model.squareProperty(i, j).isEqualTo(Square.HEAD))
-                        .then(Color.RED)
-                        .otherwise(Color.BLUE))
-        );
-*/
         piece.fillProperty().bind(
                 new ObjectBinding<Paint>() {
                     {
@@ -83,21 +75,31 @@ public class BoardGameController {
         var square = (StackPane) event.getSource();
         var row = GridPane.getRowIndex(square);
         var col = GridPane.getColumnIndex(square);
-        //System.out.printf("Click on square (%d,%d)\n", row, col);
         logger.info("Click on square ({},{})", row, col);
-        model.move(row, col);
-        if(model.isFinished(row,col, this.userName1, this.userName2)){
+        if(model.canMove(row, col)) {
+            model.move(row, col);
+        }
+        if(model.isFinished()){
+            switch (model.winner) {
+                case "draw" -> {
+                    logger.info("The game is a draw.");
+                    model.writeDatabase(this.userName1, this.userName2, "draw");
+                }
+                case "player1" -> {
+                    logger.info("The winner is {}.", this.userName1);
+                    model.writeDatabase(this.userName1, this.userName2, this.userName1);
+                }
+                case "player2" -> {
+                    logger.info("The winner is {}.", this.userName2);
+                    model.writeDatabase(this.userName1, this.userName2, this.userName2);
+                }
+            }
             try {
                 Parent root = FXMLLoader.load(getClass().getResource("/topten.fxml"));
                 Stage stage = (Stage) usernameLabel1.getScene().getWindow();
                 stage.setTitle("Results");
                 stage.setScene(new Scene(root));
                 stage.show();
-                if(model.winner == "draw"){
-                    logger.info("The game is a draw.");
-                } else {
-                    logger.info("The winner is: {}", model.winner);
-                }
             } catch (IOException e) {
                 logger.error(e);
             }

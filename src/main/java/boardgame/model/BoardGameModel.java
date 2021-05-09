@@ -36,26 +36,22 @@ public class BoardGameModel {
         return board[i][j].get();
     }
 
+    public boolean canMove(int i, int j){
+        return board[i][j].get() == Square.NONE;
+    }
+
     public void move(int i, int j) {
-        if(board[i][j].get() == Square.NONE && player.equals("player1")){
+        if(player.equals("player1")){
             board[i][j].set(Square.PIROS);
             player = "player2";
         }
-        else if(board[i][j].get() == Square.NONE && player.equals("player2")){
+        else if(player.equals("player2")){
             board[i][j].set(Square.KEK);
             player = "player1";
         }
-        /*
-        board[i][j].set(
-                switch (board[i][j].get()) {
-                    case NONE -> Square.PIROS;
-                    case PIROS -> Square.KEK;
-                    case KEK -> Square.NONE;
-                }
-        );*/
     }
 
-    public boolean isFinished(int row, int col, String name1, String name2){
+    public boolean isFinished(){
         int completedRows = 0;
         for(int i = 0; i < BOARD_SIZE; i++){
             for (int j = 0; j < BOARD_SIZE; j++){
@@ -74,54 +70,51 @@ public class BoardGameModel {
             }
         }
         if(completedRows == 22){
-            Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
-            jdbi.installPlugin(new SqlObjectPlugin());
-            try (Handle handle = jdbi.open()) {
-                MatchDao dao = handle.attach(MatchDao.class);
-                dao.createTable();
-                dao.insertGames(name1, name2, "draw");
-            }
             winner = "draw";
             return true;
         }
         else if(player.equals("player2")){
-            boolean won = true;
             for(int i = 0; i < BOARD_SIZE; i++){
-                if(board[row][i].get() != Square.PIROS){
-                    won = false;
+                if(i % 2 == 1) {
+                    boolean won = true;
+                    for (int j = 0; j < BOARD_SIZE; j++) {
+                        if (board[i][j].get() != Square.PIROS) {
+                            won = false;
+                            break;
+                        }
+                    }
+                    if(won){
+                        winner = "player1";
+                        return true;
+                    }
                 }
-            }
-            if(won) {
-                Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
-                jdbi.installPlugin(new SqlObjectPlugin());
-                try (Handle handle = jdbi.open()) {
-                    MatchDao dao = handle.attach(MatchDao.class);
-                    dao.createTable();
-                    dao.insertGames(name1, name2, name1);
-                }
-                winner = name1;
-                return true;
             }
         }else if(player.equals("player1")){
-            boolean won = true;
             for(int i = 0; i < BOARD_SIZE; i++){
-                if(board[i][col].get() != Square.KEK) {
-                    won = false;
+                boolean won = true;
+                for (int j = 0; j < BOARD_SIZE; j++) {
+                    if (board[j][i].get() != Square.KEK) {
+                        won = false;
+                        break;
+                    }
                 }
-            }
-            if(won) {
-                Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
-                jdbi.installPlugin(new SqlObjectPlugin());
-                try (Handle handle = jdbi.open()) {
-                    MatchDao dao = handle.attach(MatchDao.class);
-                    dao.createTable();
-                    dao.insertGames(name1, name2, name2);
+                if(won){
+                    winner = "player2";
+                    return true;
                 }
-                winner = name2;
-                return true;
             }
         }
         return false;
+    }
+
+    public void writeDatabase(String name1, String name2, String winnerPlayer){
+        Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
+        jdbi.installPlugin(new SqlObjectPlugin());
+        try (Handle handle = jdbi.open()) {
+            MatchDao dao = handle.attach(MatchDao.class);
+            dao.createTable();
+            dao.insertGames(name1, name2, winnerPlayer);
+        }
     }
 
     public String toString() {
@@ -133,10 +126,6 @@ public class BoardGameModel {
             sb.append('\n');
         }
         return sb.toString();
-    }
-
-    public static void main(String[] args) {
-        var model = new BoardGameModel();
     }
 
 }
