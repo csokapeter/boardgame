@@ -15,15 +15,6 @@ class BoardGameModelTest {
     }
 
     @Test
-    void canMove() {
-        assertTrue(model.canMove(0,0));
-        model.move(0,0);
-        assertFalse(model.canMove(0,0));
-        assertFalse(model.canMove(0,1));
-        assertFalse(model.canMove(1,0));
-    }
-
-    @Test
     void move() {
         model.move(0,0);
         assertEquals(Square.PIROS, model.getSquare(0,0));
@@ -31,6 +22,8 @@ class BoardGameModelTest {
         assertEquals(Square.KEK, model.getSquare(1,1));
         assertEquals(Square.PIROS, model.getSquare(0,0));
         assertEquals(Square.NONE, model.getSquare(10,10));
+        model.move(1,1);
+        assertEquals(Square.KEK, model.getSquare(1,1));
     }
 
     @Test

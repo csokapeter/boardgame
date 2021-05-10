@@ -50,31 +50,18 @@ public class BoardGameModel {
     }
 
     /**
-     * Returns whether or not the player can make a move on the square
-     * with the coordinates ({@code i},{@code j}).
-     *
-     * @param i the row number
-     * @param j the column number
-     * @return whether or not the player can make a move on the square
-     * with the coordinates ({@code i},{@code j})
-     */
-    public boolean canMove(int i, int j){
-        return board[i][j].get() == Square.NONE;
-    }
-
-    /**
      * Sets the state of the square with the coordinates ({@code i}{@code j})
-     * on the board.
+     * on the board if its NONE.
      *
      * @param i the row number
      * @param j the column number
      */
     public void move(int i, int j) {
-        if(player.equals("player1")){
+        if(board[i][j].get() == Square.NONE && player.equals("player1")){
             board[i][j].set(Square.PIROS);
             player = "player2";
         }
-        else if(player.equals("player2")){
+        else if(board[i][j].get() == Square.NONE && player.equals("player2")){
             board[i][j].set(Square.KEK);
             player = "player1";
         }

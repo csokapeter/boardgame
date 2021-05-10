@@ -76,9 +76,7 @@ public class BoardGameController {
         var row = GridPane.getRowIndex(square);
         var col = GridPane.getColumnIndex(square);
         logger.info("Click on square ({},{})", row, col);
-        if(model.canMove(row, col)) {
-            model.move(row, col);
-        }
+        model.move(row, col);
         if(model.isFinished()){
             switch (model.winner) {
                 case "draw" -> {
