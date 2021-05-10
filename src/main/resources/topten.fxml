@@ -6,13 +6,13 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="topten.TopTenController">
    <children>
-      <TableView fx:id="toptenTable" layoutX="100.0" layoutY="100.0" prefHeight="600.0" prefWidth="600.0">
+      <TableView fx:id="toptenTable" layoutX="100.0" layoutY="250.0" prefHeight="400.0" prefWidth="600.0">
         <columns>
           <TableColumn fx:id="player" prefWidth="300.0" text="Player" />
           <TableColumn fx:id="wins" prefWidth="295.0" text="Number of wins" />
         </columns>
       </TableView>
-      <Label layoutX="210.0" layoutY="40.0" text="Top 10 players by number of wins">
+      <Label layoutX="100.0" layoutY="200.0" text="Top 10 players by number of wins">
          <font>
             <Font size="24.0" />
          </font>
@@ -27,5 +27,10 @@
             <Font size="24.0" />
          </font>
       </Button>
+      <Label fx:id="winnerLabel" contentDisplay="CENTER" layoutX="100.0" layoutY="100.0" prefHeight="60.0" prefWidth="600.0">
+         <font>
+            <Font size="30.0" />
+         </font>
+      </Label>
    </children>
 </Pane>

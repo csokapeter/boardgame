@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.MapValueFactory;
@@ -33,6 +34,9 @@ public class TopTenController {
 
     @FXML
     private TableColumn<Map, String> wins;
+
+    @FXML
+    private Label winnerLabel;
 
     private TopTenModel model = new TopTenModel();
 
@@ -68,5 +72,13 @@ public class TopTenController {
         }
 
         toptenTable.getItems().addAll(items);
+    }
+
+    public void setWinner(String winnerUsername){
+        if(winnerUsername.equals("draw")) {
+            winnerLabel.setText("The game is a draw.");
+        } else {
+            winnerLabel.setText("The winner is: " + winnerUsername);
+        }
     }
 }

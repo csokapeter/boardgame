@@ -3,6 +3,7 @@ package boardgame;
 import javafx.beans.binding.ObjectBinding;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -17,6 +18,7 @@ import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import topten.TopTenController;
 
 import java.io.IOException;
 
@@ -33,6 +35,8 @@ public class BoardGameController {
 
     @FXML
     private GridPane board;
+
+    private String winner;
 
     private BoardGameModel model = new BoardGameModel();
 
@@ -81,21 +85,26 @@ public class BoardGameController {
             switch (model.winner) {
                 case "draw" -> {
                     logger.info("The game is a draw.");
+                    this.winner = "draw";
                     model.writeDatabase(this.userName1, this.userName2, "draw");
                 }
                 case "player1" -> {
                     logger.info("The winner is {}.", this.userName1);
+                    this.winner = this.userName1;
                     model.writeDatabase(this.userName1, this.userName2, this.userName1);
                 }
                 case "player2" -> {
                     logger.info("The winner is {}.", this.userName2);
+                    this.winner = this.userName2;
                     model.writeDatabase(this.userName1, this.userName2, this.userName2);
                 }
             }
             try {
-                Parent root = FXMLLoader.load(getClass().getResource("/topten.fxml"));
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/topten.fxml"));
+                Parent root = fxmlLoader.load();
+                fxmlLoader.<TopTenController>getController().setWinner(this.winner);
                 Stage stage = (Stage) usernameLabel1.getScene().getWindow();
-                stage.setTitle("Results");
+                stage.setTitle("Leaderboard");
                 stage.setScene(new Scene(root));
                 stage.show();
             } catch (IOException e) {
