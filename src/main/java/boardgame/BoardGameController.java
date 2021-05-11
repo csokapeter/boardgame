@@ -16,14 +16,12 @@ import javafx.scene.paint.Paint;
 import boardgame.model.BoardGameModel;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 import topten.TopTenController;
 
 import java.io.IOException;
 
 public class BoardGameController {
-    public static final Logger logger = LogManager.getLogger();
     private String userName1;
     private String userName2;
 
@@ -79,22 +77,22 @@ public class BoardGameController {
         var square = (StackPane) event.getSource();
         var row = GridPane.getRowIndex(square);
         var col = GridPane.getColumnIndex(square);
-        logger.info("Click on square ({},{})", row, col);
+        Logger.info("Click on square ({},{})", row, col);
         model.move(row, col);
         if(model.isFinished()){
             switch (model.winner) {
                 case "draw" -> {
-                    logger.info("The game is a draw.");
+                    Logger.info("The game is a draw.");
                     this.winner = "draw";
                     model.writeDatabase(this.userName1, this.userName2, "draw");
                 }
                 case "player1" -> {
-                    logger.info("The winner is {}.", this.userName1);
+                    Logger.info("The winner is {}.", this.userName1);
                     this.winner = this.userName1;
                     model.writeDatabase(this.userName1, this.userName2, this.userName1);
                 }
                 case "player2" -> {
-                    logger.info("The winner is {}.", this.userName2);
+                    Logger.info("The winner is {}.", this.userName2);
                     this.winner = this.userName2;
                     model.writeDatabase(this.userName1, this.userName2, this.userName2);
                 }
@@ -108,7 +106,7 @@ public class BoardGameController {
                 stage.setScene(new Scene(root));
                 stage.show();
             } catch (IOException e) {
-                logger.error(e);
+                Logger.error(e);
             }
         }
     }

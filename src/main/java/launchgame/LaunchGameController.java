@@ -13,14 +13,11 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+import org.tinylog.Logger;
 
 import java.io.IOException;
 
 public class LaunchGameController {
-
-    private static final Logger logger = LogManager.getLogger();
 
     @FXML
     private TextField firstUsernameTextfield;
@@ -45,13 +42,13 @@ public class LaunchGameController {
             stage.setTitle("Board game");
             stage.setScene(new Scene(root));
             stage.show();
-            logger.info("Usernames are set to {} and {}, loading the game.", firstUsernameTextfield.getText(), secondUsernameTextfield.getText());
+            Logger.info("Usernames are set to {} and {}, loading the game.", firstUsernameTextfield.getText(), secondUsernameTextfield.getText());
         }
     }
 
     public void AboutAction(ActionEvent actionEvent) {
         Alert about = new Alert(Alert.AlertType.INFORMATION);
-        logger.info("Showing about page.");
+        Logger.info("Showing about page.");
         about.setTitle("About");
         about.setHeaderText("Board game");
         about.setContentText("""
@@ -73,11 +70,11 @@ public class LaunchGameController {
         stage.setTitle("Leaderboard");
         stage.setScene(new Scene(root));
         stage.show();
-        logger.info("Loading the leaderboard.");
+        Logger.info("Loading the leaderboard");
     }
 
     public void QuitAction(ActionEvent actionEvent) {
-        logger.info("Quitting the game.");
+        Logger.info("Quitting the game.");
         Platform.exit();
         System.exit(0);
     }
