@@ -129,23 +129,6 @@ public class BoardGameModel {
         return false;
     }
 
-    /**
-     * Writes the game details to the database.
-     *
-     * @param name1 username of player1
-     * @param name2 username of player2
-     * @param winnerPlayer username of the winner
-     */
-    public void writeDatabase(String name1, String name2, String winnerPlayer){
-        Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
-        jdbi.installPlugin(new SqlObjectPlugin());
-        try (Handle handle = jdbi.open()) {
-            MatchDao dao = handle.attach(MatchDao.class);
-            dao.createTable();
-            dao.insertGames(name1, name2, winnerPlayer);
-        }
-    }
-
     public String toString() {
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < BOARD_SIZE; i++) {

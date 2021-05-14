@@ -14,6 +14,9 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.MapValueFactory;
 import javafx.stage.Stage;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.tinylog.Logger;
 
 import java.io.IOException;
@@ -35,8 +38,6 @@ public class TopTenController {
     @FXML
     private Label winnerLabel;
 
-    private TopTenModel model = new TopTenModel();
-
     public void quit(ActionEvent actionEvent) {
         Logger.error("Quitting the game.");
         Platform.exit();
@@ -53,7 +54,7 @@ public class TopTenController {
 
     @FXML
     public void initialize(){
-        List<String> currentTopten = model.getTopTen();
+        List<String> currentTopten = getTopTen();
 
         player.setCellValueFactory(new MapValueFactory<>("player"));
         wins.setCellValueFactory(new MapValueFactory<>("wins"));
@@ -76,6 +77,16 @@ public class TopTenController {
             winnerLabel.setText("The game is a draw.");
         } else {
             winnerLabel.setText("The winner is: " + winnerUsername);
+        }
+    }
+
+    public List<String> getTopTen() {
+        Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
+        jdbi.installPlugin(new SqlObjectPlugin());
+        try (Handle handle = jdbi.open()) {
+            MatchDao dao = handle.attach(MatchDao.class);
+            List<String> topten = dao.listMatch(10);
+            return topten;
         }
     }
 }

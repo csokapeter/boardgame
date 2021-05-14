@@ -16,7 +16,11 @@ import javafx.scene.paint.Paint;
 import boardgame.model.BoardGameModel;
 import javafx.scene.shape.Rectangle;
 import javafx.stage.Stage;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.tinylog.Logger;
+import topten.MatchDao;
 import topten.TopTenController;
 
 import java.io.IOException;
@@ -84,17 +88,17 @@ public class BoardGameController {
                 case "draw" -> {
                     Logger.info("The game is a draw.");
                     this.winner = "draw";
-                    model.writeDatabase(this.userName1, this.userName2, "draw");
+                    writeDatabase(this.userName1, this.userName2, "draw");
                 }
                 case "player1" -> {
                     Logger.info("The winner is {}.", this.userName1);
                     this.winner = this.userName1;
-                    model.writeDatabase(this.userName1, this.userName2, this.userName1);
+                    writeDatabase(this.userName1, this.userName2, this.userName1);
                 }
                 case "player2" -> {
                     Logger.info("The winner is {}.", this.userName2);
                     this.winner = this.userName2;
-                    model.writeDatabase(this.userName1, this.userName2, this.userName2);
+                    writeDatabase(this.userName1, this.userName2, this.userName2);
                 }
             }
             try {
@@ -111,6 +115,21 @@ public class BoardGameController {
         }
     }
 
+    /**
+     * Writes the game details to the database.
+     *
+     * @param name1 username of player1
+     * @param name2 username of player2
+     * @param winnerPlayer username of the winner
+     */
+    public void writeDatabase(String name1, String name2, String winnerPlayer){
+        Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
+        jdbi.installPlugin(new SqlObjectPlugin());
+        try (Handle handle = jdbi.open()) {
+            MatchDao dao = handle.attach(MatchDao.class);
+            dao.insertGames(name1, name2, winnerPlayer);
+        }
+    }
 
     public void initUsernames(String name1, String name2){
         this.userName1 = name1;

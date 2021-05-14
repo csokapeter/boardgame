@@ -6,6 +6,7 @@ import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
@@ -13,9 +14,14 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import org.jdbi.v3.core.Handle;
+import org.jdbi.v3.core.Jdbi;
+import org.jdbi.v3.sqlobject.SqlObjectPlugin;
 import org.tinylog.Logger;
+import topten.MatchDao;
 
 import java.io.IOException;
+import java.util.List;
 
 public class LaunchGameController {
 
@@ -28,12 +34,28 @@ public class LaunchGameController {
     @FXML
     private Label errorLabel;
 
+    public LaunchGameController(){
+        Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
+        jdbi.installPlugin(new SqlObjectPlugin());
+        try (Handle handle = jdbi.open()) {
+            MatchDao dao = handle.attach(MatchDao.class);
+            dao.createTable();
+        }
+    }
+
     public void startAction(javafx.event.ActionEvent actionEvent) throws IOException{
         if(firstUsernameTextfield.getText().isEmpty() || secondUsernameTextfield.getText().isEmpty()){
             errorLabel.setText("Username can not be empty!");
-        }
-        else if(firstUsernameTextfield.getText().equalsIgnoreCase("draw") || secondUsernameTextfield.getText().equalsIgnoreCase("draw")){
+            errorLabel.setAlignment(Pos.CENTER);
+        } else if(firstUsernameTextfield.getText().equals("draw") || secondUsernameTextfield.getText().equals("draw")){
             errorLabel.setText("Username cannot be 'draw'!");
+            errorLabel.setAlignment(Pos.CENTER);
+        } else if(firstUsernameTextfield.getText().equals(secondUsernameTextfield.getText())){
+            errorLabel.setText("Usernames cannot be the same!");
+            errorLabel.setAlignment(Pos.CENTER);
+        } else if(firstUsernameTextfield.getText().contains(" ") || secondUsernameTextfield.getText().contains(" ")) {
+            errorLabel.setText("Usernames can't contain spaces!");
+            errorLabel.setAlignment(Pos.CENTER);
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui.fxml"));
             Parent root = fxmlLoader.load();
