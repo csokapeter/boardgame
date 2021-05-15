@@ -38,20 +38,6 @@ public class TopTenController {
     @FXML
     private Label winnerLabel;
 
-    public void quit(ActionEvent actionEvent) {
-        Logger.error("Quitting the game.");
-        Platform.exit();
-        System.exit(0);
-    }
-
-    public void newGame(ActionEvent actionEvent) throws IOException {
-        Parent root = FXMLLoader.load(getClass().getResource("/LaunchGame.fxml"));
-        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
-        stage.setScene(new Scene(root));
-        stage.show();
-        Logger.info("Laoding new game.");
-    }
-
     @FXML
     public void initialize(){
         List<String> currentTopten = getTopTen();
@@ -70,6 +56,20 @@ public class TopTenController {
         }
 
         toptenTable.getItems().addAll(items);
+    }
+
+    public void quit(ActionEvent actionEvent) {
+        Logger.info("Quitting the game.");
+        Platform.exit();
+        System.exit(0);
+    }
+
+    public void newGame(ActionEvent actionEvent) throws IOException {
+        Parent root = FXMLLoader.load(getClass().getResource("/LaunchGame.fxml"));
+        Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
+        stage.setScene(new Scene(root));
+        stage.show();
+        Logger.info("Laoding new game.");
     }
 
     public void setWinner(String winnerUsername){

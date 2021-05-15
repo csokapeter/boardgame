@@ -1,16 +1,24 @@
 package boardgame.model;
 
-import javafx.beans.property.ReadOnlyObjectProperty;
-import javafx.beans.property.ReadOnlyObjectWrapper;
-import org.jdbi.v3.core.Handle;
-import org.jdbi.v3.core.Jdbi;
-import org.jdbi.v3.sqlobject.SqlObjectPlugin;
-import topten.MatchDao;
+import javafx.beans.property.*;
 
 /**
  * Class representing the state of the game.
  */
 public class BoardGameModel {
+
+    public enum Player{
+        PLAYER1, PLAYER2;
+
+        public Player alter() {
+            return switch (this) {
+                case PLAYER1 -> PLAYER2;
+                case PLAYER2 -> PLAYER1;
+            };
+        }
+    }
+
+    private ReadOnlyObjectWrapper<Player> nextPlayer = new ReadOnlyObjectWrapper<Player>();
 
     /**
      * The number of rows and columns the board has.
@@ -18,12 +26,11 @@ public class BoardGameModel {
     public static int BOARD_SIZE = 11;
 
     private ReadOnlyObjectWrapper<Square>[][] board = new ReadOnlyObjectWrapper[BOARD_SIZE][BOARD_SIZE];
-    private String player = "player1";
 
     /**
      * Contains the outcome of the match.
      */
-    public String winner;
+    private ReadOnlyStringWrapper winner = new ReadOnlyStringWrapper();
 
     /**
      * Creates a {@code BoardGameModel} object representing the initial state of the game.
@@ -39,6 +46,7 @@ public class BoardGameModel {
                 }
             }
         }
+        nextPlayer.set(Player.PLAYER1);
     }
 
     public ReadOnlyObjectProperty<Square> squareProperty(int i, int j) {
@@ -49,6 +57,10 @@ public class BoardGameModel {
         return board[i][j].get();
     }
 
+    public ReadOnlyStringProperty winnerProperty() { return winner.getReadOnlyProperty(); }
+
+    public String getWinner() { return winner.get(); }
+
     /**
      * Sets the state of the square with the coordinates ({@code i}{@code j})
      * on the board if its NONE.
@@ -57,13 +69,13 @@ public class BoardGameModel {
      * @param j the column number
      */
     public void move(int i, int j) {
-        if(board[i][j].get() == Square.NONE && player.equals("player1")){
+        if(board[i][j].get() == Square.NONE && nextPlayer.get().equals(Player.PLAYER1)){
             board[i][j].set(Square.PIROS);
-            player = "player2";
+            nextPlayer.set(nextPlayer.get().alter());
         }
-        else if(board[i][j].get() == Square.NONE && player.equals("player2")){
+        else if(board[i][j].get() == Square.NONE && nextPlayer.get().equals(Player.PLAYER2)){
             board[i][j].set(Square.KEK);
-            player = "player1";
+            nextPlayer.set(nextPlayer.get().alter());
         }
     }
 
@@ -92,10 +104,10 @@ public class BoardGameModel {
             }
         }
         if(completedRows == 22){
-            winner = "draw";
+            winner.set("draw");
             return true;
         }
-        else if(player.equals("player2")){
+        else if(nextPlayer.get().equals(Player.PLAYER2)){
             for(int i = 0; i < BOARD_SIZE; i++){
                 if(i % 2 == 1) {
                     boolean won = true;
@@ -106,12 +118,12 @@ public class BoardGameModel {
                         }
                     }
                     if(won){
-                        winner = "player1";
+                        winner.set("player1");
                         return true;
                     }
                 }
             }
-        }else if(player.equals("player1")){
+        }else if(nextPlayer.get().equals(Player.PLAYER1)){
             for(int i = 0; i < BOARD_SIZE; i++){
                 boolean won = true;
                 for (int j = 0; j < BOARD_SIZE; j++) {
@@ -121,7 +133,7 @@ public class BoardGameModel {
                     }
                 }
                 if(won){
-                    winner = "player2";
+                    winner.set("player2");
                     return true;
                 }
             }

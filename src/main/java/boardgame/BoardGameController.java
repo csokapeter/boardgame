@@ -1,9 +1,10 @@
 package boardgame;
 
 import javafx.beans.binding.ObjectBinding;
+import javafx.beans.property.ReadOnlyStringProperty;
+import javafx.beans.property.ReadOnlyStringWrapper;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
@@ -26,8 +27,9 @@ import topten.TopTenController;
 import java.io.IOException;
 
 public class BoardGameController {
-    private String userName1;
-    private String userName2;
+    private ReadOnlyStringWrapper userName1 = new ReadOnlyStringWrapper();
+    private ReadOnlyStringWrapper userName2 = new ReadOnlyStringWrapper();
+    private ReadOnlyStringWrapper winner = new ReadOnlyStringWrapper();
 
     @FXML
     private Label usernameLabel1;
@@ -37,8 +39,6 @@ public class BoardGameController {
 
     @FXML
     private GridPane board;
-
-    private String winner;
 
     private BoardGameModel model = new BoardGameModel();
 
@@ -51,6 +51,10 @@ public class BoardGameController {
             }
         }
     }
+
+    public ReadOnlyStringProperty winnerProperty() { return winner.getReadOnlyProperty(); }
+
+    public String getWinner() { return winner.get(); }
 
     private StackPane createSquare(int i, int j) {
         var square = new StackPane();
@@ -84,27 +88,23 @@ public class BoardGameController {
         Logger.info("Click on square ({},{})", row, col);
         model.move(row, col);
         if(model.isFinished()){
-            switch (model.winner) {
-                case "draw" -> {
-                    Logger.info("The game is a draw.");
-                    this.winner = "draw";
-                    writeDatabase(this.userName1, this.userName2, "draw");
-                }
-                case "player1" -> {
-                    Logger.info("The winner is {}.", this.userName1);
-                    this.winner = this.userName1;
-                    writeDatabase(this.userName1, this.userName2, this.userName1);
-                }
-                case "player2" -> {
-                    Logger.info("The winner is {}.", this.userName2);
-                    this.winner = this.userName2;
-                    writeDatabase(this.userName1, this.userName2, this.userName2);
-                }
+            if (model.getWinner().equals("draw")) {
+                Logger.info("The game is a draw.");
+                winner.set("draw");
+                writeDatabase(userName1.get(), userName2.get(), "draw");
+            } else if (model.getWinner().equals("player1")) {
+                Logger.info("The winner is {}.", userName1.get());
+                winner.set(userName1.get());
+                writeDatabase(userName1.get(), userName2.get(), userName1.get());
+            } else if (model.getWinner().equals("player2")) {
+                Logger.info("The winner is {}.", userName2.get());
+                winner.set(userName2.get());
+                writeDatabase(userName1.get(), userName2.get(), userName2.get());
             }
             try {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/topten.fxml"));
                 Parent root = fxmlLoader.load();
-                fxmlLoader.<TopTenController>getController().setWinner(this.winner);
+                fxmlLoader.<TopTenController>getController().setWinner(winner.get());
                 Stage stage = (Stage) usernameLabel1.getScene().getWindow();
                 stage.setTitle("Leaderboard");
                 stage.setScene(new Scene(root));
@@ -132,9 +132,9 @@ public class BoardGameController {
     }
 
     public void initUsernames(String name1, String name2){
-        this.userName1 = name1;
-        this.userName2 = name2;
-        usernameLabel1.setText("1. player (red): " + this.userName1);
-        usernameLabel2.setText("2. player (blue): " + this.userName2);
+        userName1.set(name1);
+        userName2.set(name2);
+        usernameLabel1.setText("1. player (red): " + userName1.get());
+        usernameLabel2.setText("2. player (blue): " + userName2.get());
     }
 }
