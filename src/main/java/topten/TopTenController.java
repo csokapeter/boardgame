@@ -59,7 +59,7 @@ public class TopTenController {
     }
 
     public void quit(ActionEvent actionEvent) {
-        Logger.info("Quitting the game.");
+        Logger.debug("Quitting the game.");
         Platform.exit();
         System.exit(0);
     }
@@ -69,7 +69,7 @@ public class TopTenController {
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
         stage.show();
-        Logger.info("Loading the launcher.");
+        Logger.debug("Loading the launcher.");
     }
 
     public void setWinner(String winnerUsername){

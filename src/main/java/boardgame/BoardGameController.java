@@ -56,6 +56,14 @@ public class BoardGameController {
 
     public String getWinner() { return winner.get(); }
 
+    public ReadOnlyStringProperty userName1Property() { return userName1.getReadOnlyProperty(); }
+
+    public String getUserName1() { return winner.get(); }
+
+    public ReadOnlyStringProperty userName2Property() { return userName2.getReadOnlyProperty(); }
+
+    public String getUserName2() { return userName2.get(); }
+
     private StackPane createSquare(int i, int j) {
         var square = new StackPane();
         square.getStyleClass().add("square");
@@ -69,8 +77,8 @@ public class BoardGameController {
                     protected Paint computeValue() {
                         return switch (model.squareProperty(i, j).get()) {
                             case NONE -> Color.TRANSPARENT;
-                            case PIROS -> Color.RED;
-                            case KEK -> Color.BLUE;
+                            case RED -> Color.RED;
+                            case BLUE -> Color.BLUE;
                         };
                     }
                 }
@@ -85,19 +93,19 @@ public class BoardGameController {
         var square = (StackPane) event.getSource();
         var row = GridPane.getRowIndex(square);
         var col = GridPane.getColumnIndex(square);
-        Logger.info("Click on square ({},{})", row, col);
+        Logger.debug("Click on square ({},{})", row, col);
         model.move(row, col);
         if(model.isFinished()){
             if (model.getWinner().equals("draw")) {
-                Logger.info("The game is a draw.");
+                Logger.debug("The game is a draw.");
                 winner.set("draw");
                 writeDatabase(userName1.get(), userName2.get(), "draw");
             } else if (model.getWinner().equals("player1")) {
-                Logger.info("The winner is {}.", userName1.get());
+                Logger.debug("The winner is {}.", userName1.get());
                 winner.set(userName1.get());
                 writeDatabase(userName1.get(), userName2.get(), userName1.get());
             } else if (model.getWinner().equals("player2")) {
-                Logger.info("The winner is {}.", userName2.get());
+                Logger.debug("The winner is {}.", userName2.get());
                 winner.set(userName2.get());
                 writeDatabase(userName1.get(), userName2.get(), userName2.get());
             }
@@ -115,13 +123,6 @@ public class BoardGameController {
         }
     }
 
-    /**
-     * Writes the game details to the database.
-     *
-     * @param name1 username of player1
-     * @param name2 username of player2
-     * @param winnerPlayer username of the winner
-     */
     public void writeDatabase(String name1, String name2, String winnerPlayer){
         Jdbi jdbi = Jdbi.create("jdbc:h2:./database");
         jdbi.installPlugin(new SqlObjectPlugin());

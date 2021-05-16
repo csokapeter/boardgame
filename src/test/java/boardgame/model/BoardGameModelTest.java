@@ -17,17 +17,17 @@ class BoardGameModelTest {
     @Test
     void move() {
         model.move(0,0);
-        assertEquals(Square.PIROS, model.getSquare(0,0));
+        assertEquals(Square.RED, model.getSquare(0,0));
         model.move(1,1);
-        assertEquals(Square.KEK, model.getSquare(1,1));
-        assertEquals(Square.PIROS, model.getSquare(0,0));
+        assertEquals(Square.BLUE, model.getSquare(1,1));
+        assertEquals(Square.RED, model.getSquare(0,0));
         assertEquals(Square.NONE, model.getSquare(10,10));
         model.move(1,1);
-        assertEquals(Square.KEK, model.getSquare(1,1));
+        assertEquals(Square.BLUE, model.getSquare(1,1));
     }
 
     @Test
-    void isFinished_Piros() {
+    void isFinished_Red() {
         assertFalse(model.isFinished());
         model.move(1,1);
         assertFalse(model.isFinished());
@@ -50,7 +50,7 @@ class BoardGameModelTest {
     }
 
     @Test
-    void isFinished_Kek(){
+    void isFinished_Blue(){
         assertFalse(model.isFinished());
         model.move(0,0);
         assertFalse(model.isFinished());

@@ -54,9 +54,9 @@ public class BoardGameModel {
             for (int j = 0; j < BOARD_SIZE; j++) {
                 board[i][j] = new ReadOnlyObjectWrapper<Square>(Square.NONE);
                 if(i % 2 == 1 && j % 2 == 0){
-                    board[i][j].set(Square.PIROS);
+                    board[i][j].set(Square.RED);
                 }else if(i % 2 == 0 && j % 2 == 1){
-                    board[i][j].set(Square.KEK);
+                    board[i][j].set(Square.BLUE);
                 }
             }
         }
@@ -93,11 +93,11 @@ public class BoardGameModel {
      */
     public void move(int i, int j) {
         if(board[i][j].get() == Square.NONE && nextPlayer.get().equals(Player.PLAYER1)){
-            board[i][j].set(Square.PIROS);
+            board[i][j].set(Square.RED);
             nextPlayer.set(nextPlayer.get().alter());
         }
         else if(board[i][j].get() == Square.NONE && nextPlayer.get().equals(Player.PLAYER2)){
-            board[i][j].set(Square.KEK);
+            board[i][j].set(Square.BLUE);
             nextPlayer.set(nextPlayer.get().alter());
         }
     }
@@ -112,7 +112,7 @@ public class BoardGameModel {
         int completedRows = 0;
         for(int i = 0; i < BOARD_SIZE; i++){
             for (int j = 0; j < BOARD_SIZE; j++){
-                if (board[i][j].get() == Square.KEK) {
+                if (board[i][j].get() == Square.BLUE) {
                     completedRows++;
                     break;
                 }
@@ -120,7 +120,7 @@ public class BoardGameModel {
         }
         for(int i = 0; i < BOARD_SIZE; i++){
             for (int j = 0; j < BOARD_SIZE; j++){
-                if (board[j][i].get() == Square.PIROS) {
+                if (board[j][i].get() == Square.RED) {
                     completedRows++;
                     break;
                 }
@@ -135,7 +135,7 @@ public class BoardGameModel {
                 if(i % 2 == 1) {
                     boolean won = true;
                     for (int j = 0; j < BOARD_SIZE; j++) {
-                        if (board[i][j].get() != Square.PIROS) {
+                        if (board[i][j].get() != Square.RED) {
                             won = false;
                             break;
                         }
@@ -150,7 +150,7 @@ public class BoardGameModel {
             for(int i = 0; i < BOARD_SIZE; i++){
                 boolean won = true;
                 for (int j = 0; j < BOARD_SIZE; j++) {
-                    if (board[j][i].get() != Square.KEK) {
+                    if (board[j][i].get() != Square.BLUE) {
                         won = false;
                         break;
                     }

@@ -1,6 +1,5 @@
 package launchgame;
 
-import boardgame.BoardGameApplication;
 import boardgame.BoardGameController;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -21,7 +20,6 @@ import org.tinylog.Logger;
 import topten.MatchDao;
 
 import java.io.IOException;
-import java.util.List;
 
 public class LaunchGameController {
 
@@ -45,7 +43,7 @@ public class LaunchGameController {
 
     public void startAction(javafx.event.ActionEvent actionEvent) throws IOException{
         if(firstUsernameTextfield.getText().isEmpty() || secondUsernameTextfield.getText().isEmpty()){
-            errorLabel.setText("Username can not be empty!");
+            errorLabel.setText("Username cannot be empty!");
             errorLabel.setAlignment(Pos.CENTER);
         } else if(firstUsernameTextfield.getText().equals("draw") || secondUsernameTextfield.getText().equals("draw")){
             errorLabel.setText("Username cannot be 'draw'!");
@@ -54,7 +52,7 @@ public class LaunchGameController {
             errorLabel.setText("Usernames cannot be the same!");
             errorLabel.setAlignment(Pos.CENTER);
         } else if(firstUsernameTextfield.getText().contains(" ") || secondUsernameTextfield.getText().contains(" ")) {
-            errorLabel.setText("Usernames can't contain spaces!");
+            errorLabel.setText("Usernames cannot contain spaces!");
             errorLabel.setAlignment(Pos.CENTER);
         } else {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/ui.fxml"));
@@ -64,15 +62,15 @@ public class LaunchGameController {
             stage.setTitle("Board game");
             stage.setScene(new Scene(root));
             stage.show();
-            Logger.info("Usernames are set to {} and {}, loading the game.", firstUsernameTextfield.getText(), secondUsernameTextfield.getText());
+            Logger.debug("Usernames are set to {} and {}, loading the game.", firstUsernameTextfield.getText(), secondUsernameTextfield.getText());
         }
     }
 
-    public void AboutAction(ActionEvent actionEvent) {
+    public void RulesAction(ActionEvent actionEvent) {
         Alert about = new Alert(Alert.AlertType.INFORMATION);
-        Logger.info("Showing about page.");
-        about.setTitle("About");
-        about.setHeaderText("Board game");
+        Logger.debug("Showing rules page.");
+        about.setTitle("Rules");
+        about.setHeaderText("Board game rules");
         about.setContentText("""
                 This is a two player board game.
                 The goal of the first player is to connect the left and right
@@ -92,11 +90,11 @@ public class LaunchGameController {
         stage.setTitle("Leaderboard");
         stage.setScene(new Scene(root));
         stage.show();
-        Logger.info("Loading the leaderboard");
+        Logger.debug("Loading the leaderboard");
     }
 
     public void QuitAction(ActionEvent actionEvent) {
-        Logger.info("Quitting the game.");
+        Logger.debug("Quitting the game.");
         Platform.exit();
         System.exit(0);
     }

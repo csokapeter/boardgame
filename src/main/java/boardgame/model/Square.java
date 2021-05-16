@@ -1,10 +1,10 @@
 package boardgame.model;
 
 /**
- * Class representing the posibble states of a square on the board.
+ * Class representing the possible states of a square on the board.
  */
 public enum Square {
     NONE,
-    PIROS,
-    KEK
+    RED,
+    BLUE
 }
