@@ -7,9 +7,17 @@ import javafx.beans.property.*;
  */
 public class BoardGameModel {
 
+    /**
+     * Class representing the players.
+     */
     public enum Player{
         PLAYER1, PLAYER2;
 
+        /**
+         * Alternates between the two players.
+         *
+         * @return the next player.
+         */
         public Player alter() {
             return switch (this) {
                 case PLAYER1 -> PLAYER2;
@@ -18,6 +26,9 @@ public class BoardGameModel {
         }
     }
 
+    /**
+     * The {@code Player} that moves next.
+     */
     private ReadOnlyObjectWrapper<Player> nextPlayer = new ReadOnlyObjectWrapper<Player>();
 
     /**
@@ -25,10 +36,13 @@ public class BoardGameModel {
      */
     public static int BOARD_SIZE = 11;
 
+    /**
+     * The array storing the current configuration of the board.
+     */
     private ReadOnlyObjectWrapper<Square>[][] board = new ReadOnlyObjectWrapper[BOARD_SIZE][BOARD_SIZE];
 
     /**
-     * Contains the outcome of the match.
+     * Contains the outcome of the game.
      */
     private ReadOnlyStringWrapper winner = new ReadOnlyStringWrapper();
 
@@ -53,17 +67,26 @@ public class BoardGameModel {
         return board[i][j].getReadOnlyProperty();
     }
 
+    /**
+     * {@return the state of the square of the position specified on the board}
+     *
+     * @param i the row of a position
+     * @param j the column of a position
+     */
     public Square getSquare(int i, int j) {
         return board[i][j].get();
     }
 
     public ReadOnlyStringProperty winnerProperty() { return winner.getReadOnlyProperty(); }
 
+    /**
+     * {@return which player won the game}
+     */
     public String getWinner() { return winner.get(); }
 
     /**
-     * Sets the state of the square with the coordinates ({@code i}{@code j})
-     * on the board if its NONE.
+     * Sets the state of the square of the position specified
+     * on the board if its current state is NONE.
      *
      * @param i the row number
      * @param j the column number
@@ -80,10 +103,10 @@ public class BoardGameModel {
     }
 
     /**
-     * Checks if the game has finished, and sets the winner to
+     * Checks if the game is over, and sets the winner to
      * either draw, player1 or player2.
      *
-     * @return whether the game finished.
+     * @return {@code true} if the game is over, {@code false} otherwise
      */
     public boolean isFinished(){
         int completedRows = 0;

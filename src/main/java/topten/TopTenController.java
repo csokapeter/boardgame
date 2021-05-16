@@ -69,7 +69,7 @@ public class TopTenController {
         Stage stage = (Stage) ((Node) actionEvent.getSource()).getScene().getWindow();
         stage.setScene(new Scene(root));
         stage.show();
-        Logger.info("Laoding new game.");
+        Logger.info("Loading the launcher.");
     }
 
     public void setWinner(String winnerUsername){

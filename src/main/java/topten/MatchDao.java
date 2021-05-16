@@ -42,12 +42,12 @@ public interface MatchDao {
     long insertGames(@Bind("player1") String player1, @Bind("player2") String player2, @Bind("winner") String winner);
 
     /**
-     * Returns the list of the {@code n} best players and their number of wins
-     * based on their number of wins.
+     * Returns the list of the {@code n} best players based on their number of wins
+     * and their number of wins.
      *
      * @param n the number of results to be returned
-     * @return the list of the {@code n} best players and their number of wins
-     * based on their number of wins.
+     * @return the list of the {@code n} best players based on their number of wins
+     * and their number of wins.
      */
     @SqlQuery("SELECT winner || ' ' || count(*) FROM games GROUP BY winner HAVING winner != 'draw' ORDER BY count(*) DESC LIMIT :n")
     List<String> listMatch(@Bind("n") int n);
