@@ -6,27 +6,27 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="launchgame.LaunchGameController">
    <children>
-      <Button fx:id="startButton" layoutX="320.0" layoutY="600.0" mnemonicParsing="false" onAction="#startAction" prefHeight="50.0" prefWidth="120.0" text="Start Game" />
-      <Label layoutX="200.0" layoutY="530.0" text="2. player username:">
+      <Button fx:id="startButton" layoutX="340.0" layoutY="600.0" mnemonicParsing="false" onAction="#startAction" prefHeight="50.0" prefWidth="120.0" text="Start Game" />
+      <Label layoutX="215.0" layoutY="530.0" text="2. player username:">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="200.0" layoutY="500.0" text="1. player username:">
+      <Label layoutX="215.0" layoutY="500.0" text="1. player username:">
          <font>
             <Font size="16.0" />
          </font>
       </Label>
-      <Label layoutX="250.0" layoutY="250.0" text="Board game">
+      <Label layoutX="277.5" layoutY="225.0" text="Board game">
          <font>
             <Font size="40.0" />
          </font>
       </Label>
-      <TextField fx:id="firstUsernameTextfield" layoutX="400.0" layoutY="500.0" />
-      <TextField fx:id="secondUsernameTextfield" layoutX="400.0" layoutY="530.0" />
+      <TextField fx:id="firstUsernameTextfield" layoutX="415.0" layoutY="500.0" />
+      <TextField fx:id="secondUsernameTextfield" layoutX="415.0" layoutY="530.0" />
       <Label fx:id="errorLabel" contentDisplay="CENTER" layoutX="200.0" layoutY="450.0" prefHeight="20.0" prefWidth="400.0" textAlignment="CENTER" />
-      <Button fx:id="RulesButton" layoutX="100.0" layoutY="700.0" mnemonicParsing="false" onAction="#RulesAction" prefHeight="50.0" prefWidth="120.0" text="Rules" />
-      <Button fx:id="LeaderboardButton" layoutX="320.0" layoutY="700.0" mnemonicParsing="false" onAction="#LeaderboardAction" prefHeight="50.0" prefWidth="120.0" text="Leaderboard" />
-      <Button fx:id="QuitButton" layoutX="550.0" layoutY="700.0" mnemonicParsing="false" onAction="#QuitAction" prefHeight="50.0" prefWidth="120.0" text="Quit" />
+      <Button fx:id="RulesButton" layoutX="110.0" layoutY="700.0" mnemonicParsing="false" onAction="#RulesAction" prefHeight="50.0" prefWidth="120.0" text="Rules" />
+      <Button fx:id="LeaderboardButton" layoutX="340.0" layoutY="700.0" mnemonicParsing="false" onAction="#LeaderboardAction" prefHeight="50.0" prefWidth="120.0" text="Leaderboard" />
+      <Button fx:id="QuitButton" layoutX="570.0" layoutY="700.0" mnemonicParsing="false" onAction="#QuitAction" prefHeight="50.0" prefWidth="120.0" text="Quit" />
    </children>
 </Pane>

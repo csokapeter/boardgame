@@ -17,12 +17,12 @@
             <Font size="24.0" />
          </font>
       </Label>
-      <Button layoutX="450.0" layoutY="720.0" mnemonicParsing="false" onAction="#quit" prefWidth="130.0" text="Quit">
+      <Button layoutX="443.0" layoutY="720.0" mnemonicParsing="false" onAction="#quit" prefWidth="180.0" text="Quit">
          <font>
             <Font size="24.0" />
          </font>
       </Button>
-      <Button layoutX="200.0" layoutY="720.0" mnemonicParsing="false" onAction="#newGame" text="New Game">
+      <Button layoutX="176.0" layoutY="720.0" mnemonicParsing="false" onAction="#newGame" prefWidth="180.0" text="New Game">
          <font>
             <Font size="24.0" />
          </font>
